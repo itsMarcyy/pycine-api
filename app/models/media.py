@@ -4,8 +4,8 @@ from sqlalchemy.orm import relationship
 
 from app.database.db import Base
 
-class Midia(Base):
-    __tablename__ = "midias"
+class Media(Base):
+    __tablename__ = "media"
 
     id_ = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False)
@@ -14,4 +14,4 @@ class Midia(Base):
     release_year = Column(Integer)
     type_midia = Column(String, nullable=False)
 
-    evaluations = relationship("Evaluation", back_populates="midia")
+    reviews = relationship("Review", back_populates="media")
