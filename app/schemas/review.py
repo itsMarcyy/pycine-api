@@ -1,8 +1,12 @@
 from typing import List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
-#Está dando erro, preciso resolver depois
+def validate_rating(value: float):
+    if (value * 2) % 1 != 0:
+        raise ValueError("A nota deve ser de 0.5 em 0.5")
+    return value
+
 class Review(BaseModel):
     id_: int
     media_id: int
@@ -15,13 +19,22 @@ class Review(BaseModel):
 
 class ReviewCreate(BaseModel):
     media_id: int
-    rating: int  # Avaliação de 1 a 5
+    rating: float = Field(..., ge=1, le=5)
     comment: Optional[str] = None  # Comentário opcional sobre a mídia
+
+    @field_validator("rating")
+    @classmethod
+    def validate_rating(cls, value):
+        return validate_rating(value)
 
 
 class ReviewUpdate(BaseModel):
     media_id: Optional[int] = None
-    rating: Optional[int] = None  # Avaliação de 1 a 5
+    rating: Optional[float] = Field(None, ge=1, le=5)
     comment: Optional[str] = None  # Comentário opcional sobre a mídia
 
+    @field_validator("rating")
+    @classmethod
+    def validate_rating(cls, value):
+        return validate_rating(value)
 
