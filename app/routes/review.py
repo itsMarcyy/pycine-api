@@ -51,3 +51,18 @@ def delete_review(review_id: int, db: Session = Depends(get_db)):
     
     db.delete(db_review)
     db.commit()
+
+
+@router.put("/reviews/{review_id}", response_model=Review)
+def update_review(review_id: int, review: ReviewCreate, db: Session = Depends(get_db)):
+    db_review = db.query(ReviewModel).filter(ReviewModel.id_ == review_id).first()
+
+    if db_review is None:
+        raise HTTPException(status_code=404, detail="Review not found")
+    
+    for key, value in review.dict().items():
+        setattr(db_review, key, value)
+    
+    db.commit()
+    db.refresh(db_review)
+    return db_review
