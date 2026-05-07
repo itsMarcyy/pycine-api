@@ -1,8 +1,8 @@
-from pydantic import BaseModel
 from sqlalchemy import Column, String, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 
 from app.database.db import Base
+
 
 class Media(Base):
     __tablename__ = "media"
@@ -12,6 +12,6 @@ class Media(Base):
     genre = Column(String, nullable=False)
     description = Column(String, nullable=False)
     release_year = Column(Integer)
-    type_midia = Column(String, nullable=False)
+    media_type = Column(String, nullable=False)
 
     reviews = relationship("Review", back_populates="media")

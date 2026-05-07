@@ -1,7 +1,6 @@
 from fastapi.testclient import TestClient
 from app.main import app
 
-
 client = TestClient(app)
 
 
@@ -12,17 +11,44 @@ def test_root():
     assert response.json() == {"msg": "API Pycine funcionando"}
 
 
+# Testes para as rotas de mídia
 def test_get_media():
-    pass
+    response = client.get("/media/")
+
+    assert response.status_code == 200
 
 
+# Testa criação de mídia com dados válidos
 def test_create_media():
-    pass
+    response = client.post(
+        "/media/",
+        json={
+            "title": "Teste",
+            "type": "filme",
+            "release_year": 2024,
+            "genre": "Terror",
+        },
+    )
+
+    assert response.status_code == 200
 
 
+# Testa atualização de mídia
 def test_update_media():
-    pass
+    response = client.put(
+        "/media/1",
+        json={
+            "title": "Teste Atualizado",
+            "type": "filme",
+            "release_year": 2024,
+            "genre": "Terror",
+        },
+    )
+
+    assert response.status_code == 200
 
 
+# Testa exclusão de mídia
 def test_delete_media():
-    pass
+    response = client.delete("/media/1")
+    assert response.status_code == 204

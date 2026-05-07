@@ -1,14 +1,9 @@
-#endpoints para avaliações
-from typing import Annotated
+# endpoints para avaliações
 from fastapi import Depends, HTTPException, APIRouter
-from fastapi.requests import Request
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 
-from app.schemas.review import Review
-from app.schemas.review import ReviewCreate
+from app.schemas.review import Review, ReviewCreate
 from app.database.db import get_db
 from app.database.db import SessionLocal
 from app.models.review import Review as ReviewModel
@@ -32,13 +27,13 @@ def get_reviews(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return reviews
 
 
-@router.get("/reviews/{review_id}", response_model=Review) #endpoint para ler uma avaliação específica
+@router.get("/reviews/{review_id}", response_model=Review)  # endpoint para ler uma avaliação específica
 def get_review(review_id: int, db: Session = Depends(get_db)):
     db_review = db.query(ReviewModel).filter(ReviewModel.id_ == review_id).first()
 
-    if db_review is None:
+    if not db_review:
         raise HTTPException(status_code=404, detail="Review not found")
-    
+
     return db_review
 
 
@@ -46,23 +41,8 @@ def get_review(review_id: int, db: Session = Depends(get_db)):
 def delete_review(review_id: int, db: Session = Depends(get_db)):
     db_review = db.query(ReviewModel).filter(ReviewModel.id_ == review_id).first()
 
-    if db_review is None:
+    if not db_review:
         raise HTTPException(status_code=404, detail="Review not found")
-    
+
     db.delete(db_review)
     db.commit()
-
-
-@router.put("/reviews/{review_id}", response_model=Review)
-def update_review(review_id: int, review: ReviewCreate, db: Session = Depends(get_db)):
-    db_review = db.query(ReviewModel).filter(ReviewModel.id_ == review_id).first()
-
-    if db_review is None:
-        raise HTTPException(status_code=404, detail="Review not found")
-    
-    for key, value in review.dict().items():
-        setattr(db_review, key, value)
-    
-    db.commit()
-    db.refresh(db_review)
-    return db_review
