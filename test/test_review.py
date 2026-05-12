@@ -36,6 +36,18 @@ def test_create_review():
     assert response.status_code == 200
 
 
+# Criação de review com nota inválida
+def test_create_review_invalid_rating():
+    response = client.post(
+        "/reviews", json={
+            "media_id": 1, 
+            "rating": 4.3, 
+            "comment": "teste"}
+    )
+
+    assert response.status_code == 422  
+
+
 def test_update_review():
     review = create_review()  # cria uma review antes de atualizar
     response = client.put(

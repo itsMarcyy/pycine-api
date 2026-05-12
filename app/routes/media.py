@@ -1,5 +1,3 @@
-# endpoints para midias
-
 from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
 
@@ -11,9 +9,9 @@ from app.models.media import Media as MediaModel
 router = APIRouter()
 
 
-@router.post("/media", response_model=Media)
+@router.post("/media", response_model=Media) 
 def create_media(media: MediaCreate, db: Session = Depends(get_db)):
-    db_media = MediaModel(**media.dict())
+    db_media = MediaModel(**media.model_dump())
     db.add(db_media)
     db.commit()
     db.refresh(db_media)
@@ -21,12 +19,12 @@ def create_media(media: MediaCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/media", response_model=list[Media])
-def get_medias(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def get_medias(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)): 
     medias = db.query(MediaModel).offset(skip).limit(limit).all()
     return medias
 
 
-@router.get("/media/{media_id}", response_model=Media)  # endpoint para ler uma media específica
+@router.get("/media/{media_id}", response_model=Media)
 def get_media(media_id: int, db: Session = Depends(get_db)):
     db_media = db.query(MediaModel).filter(MediaModel.id_ == media_id).first()
 
@@ -43,7 +41,7 @@ def update_media(media_id: int, media: MediaUpdate, db: Session = Depends(get_db
     if not db_media:
         raise HTTPException(status_code=404, detail="Media not found")
 
-    for key, value in media.dict().items():
+    for key, value in media.model_dump().items():
         setattr(db_media, key, value)
 
     db.commit()

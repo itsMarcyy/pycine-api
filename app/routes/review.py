@@ -14,7 +14,7 @@ router = APIRouter()
 
 @router.post("/reviews", response_model=Review)
 def create_review(review: ReviewCreate, db: Session = Depends(get_db)):
-    db_review = ReviewModel(**review.dict())
+    db_review = ReviewModel(**review.model_dump())
     db.add(db_review)
     db.commit()
     db.refresh(db_review)
@@ -27,7 +27,7 @@ def get_reviews(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return reviews
 
 
-@router.get("/reviews/{review_id}", response_model=Review)  # endpoint para ler uma avaliação específica
+@router.get("/reviews/{review_id}", response_model=Review)
 def get_review(review_id: int, db: Session = Depends(get_db)):
     db_review = db.query(ReviewModel).filter(ReviewModel.id_ == review_id).first()
 
@@ -44,7 +44,7 @@ def update_review(review_id: int, review: ReviewUpdate, db: Session = Depends(ge
     if not db_review:
         raise HTTPException(status_code=404, detail="Review not found")
 
-    for key, value in review.dict().items():
+    for key, value in review.model_dump().items():
         setattr(db_review, key, value)
 
     db.commit()
