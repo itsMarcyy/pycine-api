@@ -13,7 +13,7 @@ def test_root():
 
 # Testes para as rotas de mídia
 def test_get_media():
-    response = client.get("/media/")
+    response = client.get("/media")
 
     assert response.status_code == 200
 
@@ -21,10 +21,10 @@ def test_get_media():
 # Testa criação de mídia com dados válidos
 def test_create_media():
     response = client.post(
-        "/media/",
+        "/media",
         json={
             "title": "Teste",
-            "type": "filme",
+            "media_type": "movie",
             "release_year": 2024,
             "genre": "Terror",
         },
@@ -39,7 +39,7 @@ def test_update_media():
         "/media/1",
         json={
             "title": "Teste Atualizado",
-            "type": "filme",
+            "media_type": "movie",
             "release_year": 2024,
             "genre": "Terror",
         },

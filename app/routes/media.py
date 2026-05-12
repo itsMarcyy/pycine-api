@@ -3,7 +3,7 @@
 from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
 
-from app.schemas.media import Media, MediaCreate
+from app.schemas.media import Media, MediaCreate, MediaUpdate
 from app.database.db import get_db
 from app.models.media import Media as MediaModel
 
@@ -33,6 +33,21 @@ def get_media(media_id: int, db: Session = Depends(get_db)):
     if not db_media:
         raise HTTPException(status_code=404, detail="Media not found")
 
+    return db_media
+
+
+@router.put("/media/{media_id}", response_model=Media)
+def update_media(media_id: int, media: MediaUpdate, db: Session = Depends(get_db)):
+    db_media = db.query(MediaModel).filter(MediaModel.id_ == media_id).first()
+
+    if not db_media:
+        raise HTTPException(status_code=404, detail="Media not found")
+
+    for key, value in media.dict().items():
+        setattr(db_media, key, value)
+
+    db.commit()
+    db.refresh(db_media)
     return db_media
 
 
