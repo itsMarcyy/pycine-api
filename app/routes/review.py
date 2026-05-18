@@ -9,7 +9,10 @@ from app.database.db import SessionLocal
 from app.models.review import Review as ReviewModel
 
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/reviews",
+    tags=["Reviews"]
+)
 
 
 @router.post("/reviews", response_model=Review)

@@ -6,7 +6,10 @@ from app.database.db import get_db
 from app.models.media import Media as MediaModel
 
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/media",
+    tags=["Media"]
+)
 
 
 @router.post("/media", response_model=Media) 
