@@ -1,6 +1,6 @@
 # Pycine 🎬
 
-API desenvolvida com FastAPI para gerenciamento de mídias e avaliações.
+API desenvolvida com FastAPI para gerenciamento de mídias e avaliações, com autenticação JWT e controle de acesso por usuário.
 
 ## 🚧 Status
 Projeto em desenvolvimento.
@@ -11,16 +11,33 @@ Projeto em desenvolvimento.
 - PostgreSQL
 - SQLAlchemy
 - Pydantic
+- JWT 
 
 ## ⚙️ Funcionalidades
-- Cadastro e listagem de mídias  
-- Sistema de avaliações  
-- Validação de nota (1 a 5 com intervalo de 0.5)  
+
+## Usuários
+- Cadastro de usuários
+- Login com autenticação JWT
+
+## Midia
+- Cadastro de mídias
+- Listagem de mídias
+- Atualização e remoção de mídias
+- Associação de mídias ao usuário autenticado
+
+## Avaliações
+- Cadastro de avaliações
+- Listagem de avaliações
+- Validação de notas (1 a 5 com intervalos de 0.5)
+- Associação de avaliações ao usuário autenticado
+- Cálculo da média de avaliações por mídia
+
 
 ## 📌 Próximos passos
-- Autenticação de usuários
+- Impedir avaliações duplicadas por usuário
 - Sistema de favoritos
 - Melhorias na estrutura do projeto
+- Melhorias na documentação
 
 ## ▶️ Como rodar o projeto
 
