@@ -24,7 +24,7 @@ class ReviewCreate(BaseModel):
     rating: float = Field(..., ge=1, le=5)
     comment: Optional[str] = None  # Comentário opcional sobre a mídia
 
-    @field_validator("rating")  # Validação personalizada para garantir que a nota seja de 0.5 em 0.5
+    @field_validator("rating")  # Validação para garantir que a nota seja de 0.5 em 0.5
     @classmethod
     def validate_rating(cls, value):
         return validate_rating(value)
@@ -33,9 +33,9 @@ class ReviewCreate(BaseModel):
 class ReviewUpdate(BaseModel):
     media_id: Optional[int] = None
     rating: Optional[float] = Field(None, ge=1, le=5)
-    comment: Optional[str] = None  # Comentário opcional sobre a mídia
+    comment: Optional[str] = None  
 
-    @field_validator("rating")  # Validação personalizada para garantir que a nota seja de 0.5 em 0.5
+    @field_validator("rating")  # Validação para garantir que a nota seja de 0.5 em 0.5
     @classmethod
     def validate_rating(cls, value):
         return validate_rating(value)

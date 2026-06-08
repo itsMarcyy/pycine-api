@@ -2,9 +2,9 @@ from pydantic import BaseModel, EmailStr
 
 
 class UserCreate(BaseModel):
+    id_: int
     username: str
     email: EmailStr
-    password: str
 
     class Config:
         from_attributes = True

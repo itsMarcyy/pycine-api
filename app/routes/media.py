@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from app.schemas.media import Media, MediaCreate, MediaUpdate
 from app.database.db import get_db
 from app.models.media import Media as MediaModel
+from app.models.user import User
+from app.services.auth import get_current_user
 
 
 router = APIRouter(
@@ -13,8 +15,8 @@ router = APIRouter(
 
 
 @router.post("/media", response_model=Media) 
-def create_media(media: MediaCreate, db: Session = Depends(get_db)):
-    db_media = MediaModel(**media.model_dump())
+def create_media(media: MediaCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    db_media = MediaModel(**media.model_dump(), user_id=current_user.id_)
     db.add(db_media)
     db.commit()
     db.refresh(db_media)
@@ -22,9 +24,9 @@ def create_media(media: MediaCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/media", response_model=list[Media])
-def get_medias(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)): 
-    medias = db.query(MediaModel).offset(skip).limit(limit).all()
-    return medias
+def get_medias(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    media = db.query(MediaModel).filter(MediaModel.user_id == current_user.id_)
+    return media
 
 
 @router.get("/media/{media_id}", response_model=Media)

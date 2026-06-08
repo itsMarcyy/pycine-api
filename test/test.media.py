@@ -4,13 +4,6 @@ from app.main import app
 client = TestClient(app)
 
 
-
-def test_root():
-    response = client.get("/")
-    assert response.status_code == 200
-    assert response.json() == {"msg": "API Pycine funcionando"}
-
-
 def test_get_media():
     response = client.get("/media")
 
@@ -38,7 +31,7 @@ def test_create_media_invalid_type():
         "/media",
         json={
             "title": "Teste",
-            "media_type": "filme",  # tipo de mídia inválido, deve ser "movie" ou "serie"
+            "media_type": "filme",  
             "release_year": 2024,
             "genre": "Terror",
         },

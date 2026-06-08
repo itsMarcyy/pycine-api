@@ -3,10 +3,12 @@ from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
 
 
+from app.models.user import User
 from app.schemas.review import Review, ReviewCreate, ReviewUpdate
 from app.database.db import get_db
 from app.database.db import SessionLocal
 from app.models.review import Review as ReviewModel
+from app.services.auth import get_current_user
 
 
 router = APIRouter(
@@ -16,8 +18,8 @@ router = APIRouter(
 
 
 @router.post("/reviews", response_model=Review)
-def create_review(review: ReviewCreate, db: Session = Depends(get_db)):
-    db_review = ReviewModel(**review.model_dump())
+def create_review(review: ReviewCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    db_review = ReviewModel(**review.model_dump(), user_id=current_user.id_)
     db.add(db_review)
     db.commit()
     db.refresh(db_review)
@@ -25,8 +27,8 @@ def create_review(review: ReviewCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/reviews", response_model=list[Review])
-def get_reviews(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    reviews = db.query(ReviewModel).offset(skip).limit(limit).all()
+def get_reviews(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    reviews = db.query(ReviewModel).filter(ReviewModel.user_id == current_user.id_)
     return reviews
 
 

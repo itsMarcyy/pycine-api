@@ -8,8 +8,11 @@ class Review(Base):
     __tablename__ = "reviews"
 
     id_ = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id_"))
     media_id = Column(Integer, ForeignKey("media.id_"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id_"))
     rating = Column(Float, nullable=False)
     comment = Column(String(255))
 
     media = relationship("Media", back_populates="reviews")
+    user = relationship("User", back_populates="reviews")

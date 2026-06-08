@@ -1,7 +1,3 @@
-# Schemas validam entrada e saída da API.
-# Create = entrada | Midia = saída | Update = atualização parcial
-# Não confundir com Model (banco de dados)
-
 from typing import List, Optional
 from pydantic import BaseModel, field_validator
 from enum import Enum
@@ -22,6 +18,7 @@ class MediaType(str, Enum):
 
 class Media(BaseModel):
     id_: int
+    user_id: int
     title: str
     description: str
     release_year: int
@@ -36,8 +33,7 @@ class MediaCreate(BaseModel):
     media_type: MediaType
 
     @field_validator(
-        "media_type", mode="before"
-    )  # Valida o campo media_type antes de criar a instância, garantindo que seja normalizado
+        "media_type", mode="before")  # Valida o campo media_type antes de criar a instância, garantindo que seja normalizado
     @classmethod
     def normalize_type_midia(cls, value):
         if isinstance(
@@ -59,4 +55,4 @@ class MediaUpdate(BaseModel):
     description: Optional[str] = None
     release_year: Optional[int] = None
     genre: Optional[str] = None
-    media_type: Optional[MediaType] = None  # "movie" ou "serie"
+    media_type: Optional[MediaType] = None 

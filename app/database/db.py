@@ -12,13 +12,13 @@ load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if not DATABASE_URL:
-    raise ValueError("DATABASE_URL não definida no .env")
+    raise ValueError("DATABASE_URL is not defined in the .env file")
 
 
 engine = create_engine(
     DATABASE_URL,
-    echo=True,
-    future=True
+    echo=True, 
+    future=True 
 )
 SessionLocal = sessionmaker(bind=engine) #conexão
 
