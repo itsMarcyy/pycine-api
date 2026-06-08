@@ -56,3 +56,8 @@ class MediaUpdate(BaseModel):
     release_year: Optional[int] = None
     genre: Optional[str] = None
     media_type: Optional[MediaType] = None 
+
+
+class MediaRating(BaseModel):
+    media_id: int
+    average_rating: float
