@@ -100,13 +100,23 @@ def update_media(
 
 def delete_media(
     media_id: int, 
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
     ):
 
     db_media = db.query(MediaModel).filter(MediaModel.id_ == media_id).first()
 
     if not db_media:
-        raise HTTPException(status_code=404, detail="Media not found")
+        raise HTTPException(
+            status_code=404, 
+            detail="Media not found"
+            )
+    
+    if db_media.user_id != current_user.id_:
+        raise HTTPException(
+            status_code=403, 
+            detail="Not authorized to delete this media"
+            )
 
     db.delete(db_media)
     db.commit()

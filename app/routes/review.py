@@ -17,11 +17,17 @@ router = APIRouter(
 )
 
 
-@router.post("/reviews", response_model=Review)
+@router.post(
+        "", 
+        response_model=Review, 
+        summary="Create a new review"
+        )
+
 def create_review(
     review: ReviewCreate, 
     db: Session = Depends(get_db), 
-    current_user: User = Depends(get_current_user)):
+    current_user: User = Depends(get_current_user)
+    ):
 
     existing_review = db.query(ReviewModel).filter(
         ReviewModel.user_id == current_user.id_,
@@ -31,7 +37,8 @@ def create_review(
     if existing_review:
         raise HTTPException(
             status_code=400, 
-            detail="You have already reviewed this media")
+            detail="You have already reviewed this media"
+            )
 
     db_review = ReviewModel(**review.model_dump(), user_id=current_user.id_)
     db.add(db_review)
@@ -40,7 +47,12 @@ def create_review(
     return db_review
 
 
-@router.get("/reviews", response_model=list[Review])
+@router.get(
+        "", 
+        response_model=list[Review], 
+        summary="Get all reviews"
+        )
+
 def get_reviews(
     skip: int = 0, 
     limit: int = 100, 
@@ -51,7 +63,12 @@ def get_reviews(
     return reviews
 
 
-@router.get("/reviews/{review_id}", response_model=Review)
+@router.get(
+        "/{review_id}", 
+        response_model=Review, 
+        summary="Get a review by ID"
+        )
+
 def get_review(
     review_id: int, 
     db: Session = Depends(get_db)):
@@ -61,12 +78,18 @@ def get_review(
     if not db_review:
         raise HTTPException(
             status_code=404, 
-            detail="Review not found")
+            detail="Review not found"
+            )
 
     return db_review
 
 
-@router.put("/reviews/{review_id}", response_model=Review)
+@router.put(
+        "/{review_id}", 
+        response_model=Review, 
+        summary="Update a review"
+        )
+
 def update_review(
     review_id: int, 
     review: ReviewUpdate, 
@@ -77,7 +100,8 @@ def update_review(
     if not db_review:
         raise HTTPException(
             status_code=404, 
-            detail="Review not found")
+            detail="Review not found"
+            )
 
     for key, value in review.model_dump().items():
         setattr(db_review, key, value)
@@ -87,17 +111,31 @@ def update_review(
     return db_review
 
 
-@router.delete("/reviews/{review_id}", status_code=204)
+@router.delete(
+        "/{review_id}", 
+        status_code=204, 
+        summary="Delete a review"
+        )
+
 def delete_review(
     review_id: int, 
-    db: Session = Depends(get_db)):
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+    ):
 
     db_review = db.query(ReviewModel).filter(ReviewModel.id_ == review_id).first()
 
     if not db_review:
         raise HTTPException(
             status_code=404, 
-            detail="Review not found")
+            detail="Review not found"
+            )
+    
+    if db_review.user_id != current_user.id_:
+        raise HTTPException(
+            status_code=403, 
+            detail="Not authorized to delete this review"
+            )
 
     db.delete(db_review)
     db.commit()

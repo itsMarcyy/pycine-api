@@ -15,5 +15,5 @@ class Media(Base):
     release_year = Column(Integer)
     media_type = Column(String, nullable=False)
 
-    reviews = relationship("Review", back_populates="media")
+    reviews = relationship("Review", back_populates="media", cascade="all, delete-orphan")
     user = relationship("User", back_populates="media")
