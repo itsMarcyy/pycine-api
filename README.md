@@ -11,7 +11,8 @@ Projeto em desenvolvimento.
 - PostgreSQL
 - SQLAlchemy
 - Pydantic
-- JWT 
+- JWT
+- Pytest
 
 ## ⚙️ Funcionalidades
 
@@ -32,9 +33,14 @@ Projeto em desenvolvimento.
 - Associação de avaliações ao usuário autenticado
 - Cálculo da média de avaliações por mídia
 
+##📂 Estrutura do Projeto
+- Organização modular utilizando FastAPI
+- Schemas com Pydantic
+- Banco de dados PostgreSQL
+- Autenticação baseada em JWT
+- Testes automatizados para módulos de mídias e avaliações
 
 ## 📌 Próximos passos
-- Impedir avaliações duplicadas por usuário
 - Sistema de favoritos
 - Melhorias na estrutura do projeto
 - Melhorias na documentação
