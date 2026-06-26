@@ -33,7 +33,7 @@ Projeto em desenvolvimento.
 - Associação de avaliações ao usuário autenticado
 - Cálculo da média de avaliações por mídia
 
-##📂 Estrutura do Projeto
+## 📂 Estrutura do Projeto
 - Organização modular utilizando FastAPI
 - Schemas com Pydantic
 - Banco de dados PostgreSQL
